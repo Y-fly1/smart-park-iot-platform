@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.BuildingMapper">
+    
+    <resultMap type="Building" id="BuildingResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBuildingVo">
+        select id, name, code, create_time, update_time, create_by, update_by, remark from building
+    </sql>
+
+    <select id="selectBuildingList" parameterType="Building" resultMap="BuildingResult">
+        <include refid="selectBuildingVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null "> and code = #{code}</if>
+        </where>
+    </select>
+    
+    <select id="selectBuildingById" parameterType="Long" resultMap="BuildingResult">
+        <include refid="selectBuildingVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAllByNur" resultType="com.zhiwei.park.domain.Building">
+        select f.*
+        from building f
+                 left join room r on r.building_id = f.id
+                 left join point b on b.room_id = r.id
+                 left join tenant e on e.point_id = b.id
+        where b.point_status = 1
+        group by f.id
+        order by code, create_time desc
+    </select>
+
+    <insert id="insertBuilding" parameterType="Building" useGeneratedKeys="true" keyProperty="id">
+        insert into building
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuilding" parameterType="Building">
+        update building
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <resultMap id="floorTreeResult" type="com.zhiwei.park.domain.vo.BuildingVo">
+        <id property="id" column="fid"/>
+        <result property="name" column="fname"/>
+        <result property="code" column="fcode"/>
+        <collection property="roomVoList" ofType="com.zhiwei.park.domain.vo.RoomVo">
+            <id property="id" column="rid"/>
+            <result property="code" column="rcode"/>
+            <result property="buildingId" column="building_id"/>
+            <result property="floorName" column="fname"/>
+            <collection property="bedVoList" ofType="com.zhiwei.park.domain.vo.PointVo">
+                <id property="id" column="bid"/>
+                <result property="pointCode" column="point_code"/>
+                <result property="pointStatus" column="point_status"/>
+                <result property="roomId" column="room_id"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectBuildingRoomPointByPointStatus" resultMap="floorTreeResult">
+        select f.id as fid, f.name as fname, f.code as fcode,
+               r.id as rid, r.code as rcode, r.building_id,
+               b.id as bid, b.point_code, b.point_status, b.room_id
+        from building f
+                 inner join room r on r.building_id = f.id and r.is_deleted = 0
+                 inner join point b on b.room_id = r.id
+        where b.point_status = #{status}
+        order by f.code, r.sort, b.sort
+    </select>
+
+    <delete id="deleteBuildingById" parameterType="Long">
+        delete from building where id = #{id}
+    </delete>
+
+    <delete id="deleteBuildingByIds" parameterType="String">
+        delete from building where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllBuildingsWithDevice" resultType="com.zhiwei.park.domain.vo.BuildingVo">
+        select f.id,f.name,f.code from building f
+               left join room r on r.building_id=f.id
+               left join point b on b.room_id=r.id
+               left join device d on d.binding_location=r.id and d.location_type=1 and d.physical_location_type=1
+               left join device dd on dd.binding_location=b.id and dd.location_type=1 and dd.physical_location_type=2
+        where d.id is not null or dd.id is not  null
+        group by f.id
+        order by f.id
+    </select>
+
+</mapper>

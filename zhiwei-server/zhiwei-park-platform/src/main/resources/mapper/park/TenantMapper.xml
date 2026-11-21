@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.TenantMapper">
+    
+    <resultMap type="Tenant" id="TenantResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="image"    column="image"    />
+        <result property="creditCode"    column="credit_code"    />
+        <result property="sex"    column="sex"    />
+        <result property="status"    column="status"    />
+        <result property="phone"    column="phone"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="address"    column="address"    />
+        <result property="licenseCopyImg"    column="license_copy_img"    />
+        <result property="licenseImg"    column="license_img"    />
+        <result property="pointCode"    column="point_code"    />
+        <result property="pointId"    column="point_id"    />
+        <result property="nation"    column="nation"    />
+        <result property="educationLevel"    column="education_level"    />
+        <result property="socialSecurityCard"    column="social_security_card"    />
+        <result property="livingSituation"    column="living_situation"    />
+        <result property="religiousBelief"    column="religious_belief"    />
+        <result property="economicSource"    column="economic_source"    />
+        <result property="maritalStatus"    column="marital_status"    />
+        <result property="medicalPaymentMethod"    column="medical_payment_method"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="coreSuggestion"    column="core_suggestion"    />
+    </resultMap>
+
+    <sql id="selectTenantVo">
+        select id, name, image, credit_code, sex, status, phone, birthday, address, license_copy_img, license_img, point_code, point_id, nation, education_level, social_security_card, living_situation, religious_belief, economic_source, marital_status, medical_payment_method, create_time, update_time, create_by, update_by, remark, core_suggestion from tenant
+    </sql>
+
+    <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="birthday != null  and birthday != ''"> and birthday = #{birthday}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="licenseCopyImg != null  and licenseCopyImg != ''"> and license_copy_img = #{licenseCopyImg}</if>
+            <if test="licenseImg != null  and licenseImg != ''"> and license_img = #{licenseImg}</if>
+            <if test="pointCode != null  and pointCode != ''"> and point_code = #{pointCode}</if>
+            <if test="pointId != null "> and point_id = #{pointId}</if>
+            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+            <if test="educationLevel != null  and educationLevel != ''"> and education_level = #{educationLevel}</if>
+            <if test="socialSecurityCard != null  and socialSecurityCard != ''"> and social_security_card = #{socialSecurityCard}</if>
+            <if test="livingSituation != null  and livingSituation != ''"> and living_situation = #{livingSituation}</if>
+            <if test="religiousBelief != null  and religiousBelief != ''"> and religious_belief = #{religiousBelief}</if>
+            <if test="economicSource != null  and economicSource != ''"> and economic_source = #{economicSource}</if>
+            <if test="maritalStatus != null  and maritalStatus != ''"> and marital_status = #{maritalStatus}</if>
+            <if test="medicalPaymentMethod != null  and medicalPaymentMethod != ''"> and medical_payment_method = #{medicalPaymentMethod}</if>
+            <if test="coreSuggestion != null  and coreSuggestion != ''"> and core_suggestion = #{coreSuggestion}</if>
+        </where>
+    </select>
+    
+    <select id="selectTenantById" parameterType="Long" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTenant" parameterType="Tenant" useGeneratedKeys="true" keyProperty="id">
+        insert into tenant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="image != null">image,</if>
+            <if test="creditCode != null">credit_code,</if>
+            <if test="sex != null">sex,</if>
+            <if test="status != null">status,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="address != null">address,</if>
+            <if test="licenseCopyImg != null">license_copy_img,</if>
+            <if test="licenseImg != null">license_img,</if>
+            <if test="pointCode != null">point_code,</if>
+            <if test="pointId != null">point_id,</if>
+            <if test="nation != null">nation,</if>
+            <if test="educationLevel != null">education_level,</if>
+            <if test="socialSecurityCard != null">social_security_card,</if>
+            <if test="livingSituation != null">living_situation,</if>
+            <if test="religiousBelief != null">religious_belief,</if>
+            <if test="economicSource != null">economic_source,</if>
+            <if test="maritalStatus != null">marital_status,</if>
+            <if test="medicalPaymentMethod != null">medical_payment_method,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            <if test="coreSuggestion != null">core_suggestion,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="image != null">#{image},</if>
+            <if test="creditCode != null">#{creditCode},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="status != null">#{status},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="address != null">#{address},</if>
+            <if test="licenseCopyImg != null">#{licenseCopyImg},</if>
+            <if test="licenseImg != null">#{licenseImg},</if>
+            <if test="pointCode != null">#{pointCode},</if>
+            <if test="pointId != null">#{pointId},</if>
+            <if test="nation != null">#{nation},</if>
+            <if test="educationLevel != null">#{educationLevel},</if>
+            <if test="socialSecurityCard != null">#{socialSecurityCard},</if>
+            <if test="livingSituation != null">#{livingSituation},</if>
+            <if test="religiousBelief != null">#{religiousBelief},</if>
+            <if test="economicSource != null">#{economicSource},</if>
+            <if test="maritalStatus != null">#{maritalStatus},</if>
+            <if test="medicalPaymentMethod != null">#{medicalPaymentMethod},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="coreSuggestion != null">#{coreSuggestion},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTenant" parameterType="Tenant">
+        update tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="creditCode != null">credit_code = #{creditCode},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="licenseCopyImg != null">license_copy_img = #{licenseCopyImg},</if>
+            <if test="licenseImg != null">license_img = #{licenseImg},</if>
+            <if test="pointCode != null">point_code = #{pointCode},</if>
+            <if test="pointId != null">point_id = #{pointId},</if>
+            <if test="nation != null">nation = #{nation},</if>
+            <if test="educationLevel != null">education_level = #{educationLevel},</if>
+            <if test="socialSecurityCard != null">social_security_card = #{socialSecurityCard},</if>
+            <if test="livingSituation != null">living_situation = #{livingSituation},</if>
+            <if test="religiousBelief != null">religious_belief = #{religiousBelief},</if>
+            <if test="economicSource != null">economic_source = #{economicSource},</if>
+            <if test="maritalStatus != null">marital_status = #{maritalStatus},</if>
+            <if test="medicalPaymentMethod != null">medical_payment_method = #{medicalPaymentMethod},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="coreSuggestion != null">core_suggestion = #{coreSuggestion},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTenantById" parameterType="Long">
+        delete from tenant where id = #{id}
+    </delete>
+
+    <delete id="deleteTenantByIds" parameterType="String">
+        delete from tenant where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

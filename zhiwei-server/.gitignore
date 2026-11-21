@@ -1,0 +1,12 @@
+target/
+.idea/
+*.log
+*.iml
+*.class
+
+# 本地环境变量与私有配置（含密钥，禁止提交）
+.env
+.env.local
+application-local.yml
+application-local.yaml
+*.local.yml

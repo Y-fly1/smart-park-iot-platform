@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.SettleInMapper">
+    
+    <resultMap type="SettleIn" id="SettleInResult">
+        <result property="id"    column="id"    />
+        <result property="tenantName"    column="tenant_name"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="creditCode"    column="credit_code"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="serviceLevelName"    column="service_level_name"    />
+        <result property="pointCode"    column="point_code"    />
+        <result property="status"    column="status"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSettleInVo">
+        select id, tenant_name, tenant_id, credit_code, start_date, end_date, service_level_name, point_code, status, sort_order, create_time, update_time, create_by, update_by, remark from settle_in
+    </sql>
+
+    <select id="selectSettleInList" parameterType="SettleIn" resultMap="SettleInResult">
+        <include refid="selectSettleInVo"/>
+        <where>  
+            <if test="tenantName != null  and tenantName != ''"> and tenant_name like concat('%', #{tenantName}, '%')</if>
+            <if test="tenantId != null "> and tenant_id = #{tenantId}</if>
+            <if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="serviceLevelName != null  and serviceLevelName != ''"> and service_level_name like concat('%', #{serviceLevelName}, '%')</if>
+            <if test="pointCode != null  and pointCode != ''"> and point_code = #{pointCode}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectSettleInById" parameterType="Long" resultMap="SettleInResult">
+        <include refid="selectSettleInVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSettleIn" parameterType="SettleIn" useGeneratedKeys="true" keyProperty="id">
+        insert into settle_in
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tenantName != null and tenantName != ''">tenant_name,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="creditCode != null and creditCode != ''">credit_code,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">service_level_name,</if>
+            <if test="pointCode != null and pointCode != ''">point_code,</if>
+            <if test="status != null">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tenantName != null and tenantName != ''">#{tenantName},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="creditCode != null and creditCode != ''">#{creditCode},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">#{serviceLevelName},</if>
+            <if test="pointCode != null and pointCode != ''">#{pointCode},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSettleIn" parameterType="SettleIn">
+        update settle_in
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tenantName != null and tenantName != ''">tenant_name = #{tenantName},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="creditCode != null and creditCode != ''">credit_code = #{creditCode},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">service_level_name = #{serviceLevelName},</if>
+            <if test="pointCode != null and pointCode != ''">point_code = #{pointCode},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSettleInById" parameterType="Long">
+        delete from settle_in where id = #{id}
+    </delete>
+
+    <delete id="deleteSettleInByIds" parameterType="String">
+        delete from settle_in where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

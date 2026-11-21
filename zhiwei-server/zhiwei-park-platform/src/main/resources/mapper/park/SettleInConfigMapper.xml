@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.SettleInConfigMapper">
+    
+    <resultMap type="SettleInConfig" id="SettleInConfigResult">
+        <result property="id"    column="id"    />
+        <result property="settleInId"    column="settle_in_id"    />
+        <result property="serviceLevelId"    column="service_level_id"    />
+        <result property="serviceLevelName"    column="service_level_name"    />
+        <result property="feeStartDate"    column="fee_start_date"    />
+        <result property="feeEndDate"    column="fee_end_date"    />
+        <result property="deposit"    column="deposit"    />
+        <result property="serviceFee"    column="service_fee"    />
+        <result property="siteFee"    column="site_fee"    />
+        <result property="insurancePayment"    column="insurance_payment"    />
+        <result property="governmentSubsidy"    column="government_subsidy"    />
+        <result property="otherFees"    column="other_fees"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSettleInConfigVo">
+        select id, settle_in_id, service_level_id, service_level_name, fee_start_date, fee_end_date, deposit, service_fee, site_fee, insurance_payment, government_subsidy, other_fees, sort_order, create_time, update_time, create_by, update_by, remark from settle_in_config
+    </sql>
+
+    <select id="selectSettleInConfigList" parameterType="SettleInConfig" resultMap="SettleInConfigResult">
+        <include refid="selectSettleInConfigVo"/>
+        <where>  
+            <if test="settleInId != null "> and settle_in_id = #{settleInId}</if>
+            <if test="serviceLevelId != null "> and service_level_id = #{serviceLevelId}</if>
+            <if test="serviceLevelName != null  and serviceLevelName != ''"> and service_level_name like concat('%', #{serviceLevelName}, '%')</if>
+            <if test="feeStartDate != null "> and fee_start_date = #{feeStartDate}</if>
+            <if test="feeEndDate != null "> and fee_end_date = #{feeEndDate}</if>
+            <if test="deposit != null "> and deposit = #{deposit}</if>
+            <if test="serviceFee != null "> and service_fee = #{serviceFee}</if>
+            <if test="siteFee != null "> and site_fee = #{siteFee}</if>
+            <if test="insurancePayment != null "> and insurance_payment = #{insurancePayment}</if>
+            <if test="governmentSubsidy != null "> and government_subsidy = #{governmentSubsidy}</if>
+            <if test="otherFees != null "> and other_fees = #{otherFees}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+    </select>
+    
+    <select id="selectSettleInConfigById" parameterType="Long" resultMap="SettleInConfigResult">
+        <include refid="selectSettleInConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSettleInConfig" parameterType="SettleInConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into settle_in_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="settleInId != null">settle_in_id,</if>
+            <if test="serviceLevelId != null">service_level_id,</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">service_level_name,</if>
+            <if test="feeStartDate != null">fee_start_date,</if>
+            <if test="feeEndDate != null">fee_end_date,</if>
+            <if test="deposit != null">deposit,</if>
+            <if test="serviceFee != null">service_fee,</if>
+            <if test="siteFee != null">site_fee,</if>
+            <if test="insurancePayment != null">insurance_payment,</if>
+            <if test="governmentSubsidy != null">government_subsidy,</if>
+            <if test="otherFees != null">other_fees,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="settleInId != null">#{settleInId},</if>
+            <if test="serviceLevelId != null">#{serviceLevelId},</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">#{serviceLevelName},</if>
+            <if test="feeStartDate != null">#{feeStartDate},</if>
+            <if test="feeEndDate != null">#{feeEndDate},</if>
+            <if test="deposit != null">#{deposit},</if>
+            <if test="serviceFee != null">#{serviceFee},</if>
+            <if test="siteFee != null">#{siteFee},</if>
+            <if test="insurancePayment != null">#{insurancePayment},</if>
+            <if test="governmentSubsidy != null">#{governmentSubsidy},</if>
+            <if test="otherFees != null">#{otherFees},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSettleInConfig" parameterType="SettleInConfig">
+        update settle_in_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="settleInId != null">settle_in_id = #{settleInId},</if>
+            <if test="serviceLevelId != null">service_level_id = #{serviceLevelId},</if>
+            <if test="serviceLevelName != null and serviceLevelName != ''">service_level_name = #{serviceLevelName},</if>
+            <if test="feeStartDate != null">fee_start_date = #{feeStartDate},</if>
+            <if test="feeEndDate != null">fee_end_date = #{feeEndDate},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="serviceFee != null">service_fee = #{serviceFee},</if>
+            <if test="siteFee != null">site_fee = #{siteFee},</if>
+            <if test="insurancePayment != null">insurance_payment = #{insurancePayment},</if>
+            <if test="governmentSubsidy != null">government_subsidy = #{governmentSubsidy},</if>
+            <if test="otherFees != null">other_fees = #{otherFees},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSettleInConfigById" parameterType="Long">
+        delete from settle_in_config where id = #{id}
+    </delete>
+
+    <delete id="deleteSettleInConfigByIds" parameterType="String">
+        delete from settle_in_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

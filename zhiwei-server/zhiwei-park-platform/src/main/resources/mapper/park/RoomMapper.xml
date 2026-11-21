@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.RoomMapper">
+    
+    <resultMap type="Room" id="RoomResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="sort"    column="sort"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="buildingId"    column="building_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectRoomVo">
+        select id, code, sort, type_name, building_id, create_time, update_time, is_deleted, create_by, update_by, remark from room
+    </sql>
+
+    <select id="selectRoomList" parameterType="Room" resultMap="RoomResult">
+        <include refid="selectRoomVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="buildingId != null "> and building_id = #{buildingId}</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectRoomById" parameterType="Long" resultMap="RoomResult">
+        <include refid="selectRoomVo"/>
+        where id = #{id}
+    </select>
+
+
+    <resultMap id="roomVoResultMap" type="com.zhiwei.park.domain.vo.RoomVo">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="floorName" column="fname"/>
+        <result column="price" property="price"/>
+        <collection property="bedVoList" ofType="com.zhiwei.park.domain.vo.PointVo">
+            <id column="bid" property="id"/>
+            <result column="point_code" property="pointCode"/>
+            <result column="point_status" property="pointStatus"/>
+            <result column="room_id" property="roomId"/>
+            <result column="ename" property="ename"/>
+            <result column="eid" property="tenantId"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByBuildingId" resultMap="roomVoResultMap">
+        select r.*,
+               f.name  as fname,
+               rt.*,
+               b.id    as bid,
+               b.point_code,
+               b.sort,
+               b.point_status,
+               b.room_id,
+               b.create_by,
+               b.update_by,
+               b.remark,
+               b.create_time,
+               b.update_time,
+               e.name  as ename,
+               e.id    as eid
+        from room r
+                 left join building f on f.id = r.building_id
+                 left join area_type rt on rt.name = r.type_name
+                 left join point b on b.room_id = r.id
+                 left join tenant e on b.id = e.point_id
+        where r.building_id = #{buildingId}
+        order by r.sort, r.create_time desc
+    </select>
+
+
+
+    <resultMap id="roomVoWithNurResultMap" type="com.zhiwei.park.domain.vo.RoomVo">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="floorName" column="fname"/>
+        <result column="price" property="price"/>
+        <collection property="bedVoList" ofType="com.zhiwei.park.domain.vo.PointVo">
+            <id column="bid" property="id"/>
+            <result column="point_code" property="pointCode"/>
+            <result column="point_status" property="pointStatus"/>
+            <result column="room_id" property="roomId"/>
+            <result column="ename" property="ename"/>
+            <result column="eid" property="tenantId"/>
+            <collection property="userVos" ofType="com.zhiwei.common.core.domain.entity.SysUser" column="eid"
+                        select="com.zhiwei.park.mapper.InspectionTenantMapper.selectUserByTenantId">
+                <result column="nick_name" property="nickName"/>
+                <result column="userId" property="userId"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectByBuildingIdWithNur" resultMap="roomVoWithNurResultMap">
+        select r.*,
+               b.id   as bid,
+               b.point_code,
+               b.sort,
+               b.point_status,
+               b.room_id,
+               e.name as ename,
+               e.id   as eid
+        from room r
+                 left join point b on b.room_id = r.id
+                 left join tenant e on e.point_id = b.id
+        where r.building_id = #{buildingId}
+          and e.id is not null
+        order by r.sort, r.create_time desc
+    </select>
+
+    <resultMap id="roomVoWithDeviceResultMap" type="com.zhiwei.park.domain.vo.RoomVo">
+        <id property="id" column="rid"/>
+        <result property="code" column="code"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="floorName" column="fname"/>
+        <result property="price" column="price"/>
+        <collection property="bedVoList" ofType="com.zhiwei.park.domain.vo.PointVo" notNullColumn="bid">
+            <id property="id" column="bid"/>
+            <result column="point_code" property="pointCode"/>
+            <result column="point_status" property="pointStatus"/>
+            <result column="room_id" property="roomId"/>
+            <result column="ename" property="ename"/>
+            <result column="eid" property="tenantId"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectByBuildingIdWithDevice" resultMap="roomVoWithDeviceResultMap">
+        select r.id as rid,
+               r.code,
+               r.building_id,
+               f.name as fname,
+               rt.price,
+               b.id   as bid,
+               b.point_code,
+               b.point_status,
+               b.room_id,
+               e.name as ename,
+               e.id   as eid
+        from room r
+                 left join building f on f.id = r.building_id
+                 left join area_type rt on rt.name = r.type_name
+                 left join point b on b.room_id = r.id
+                 left join tenant e on e.point_id = b.id
+        where r.building_id = #{buildingId}
+          and r.is_deleted = 0
+          and (exists (select 1
+                       from device d
+                       where d.binding_location = r.id
+                         and d.location_type = 1
+                         and d.physical_location_type = 1)
+            or exists (select 1
+                       from device d
+                                inner join point db on db.id = d.binding_location
+                       where db.room_id = r.id
+                         and d.location_type = 1
+                         and d.physical_location_type = 2))
+        order by r.sort, b.sort
+    </select>
+
+    <resultMap id="roomDetailResult" type="com.zhiwei.park.domain.vo.RoomVo">
+        <id property="id" column="rid"/>
+        <result property="floorName" column="building_name"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="roomId" column="room_id"/>
+        <result property="code" column="code"/>
+        <result property="price" column="price"/>
+    </resultMap>
+
+    <select id="selectRoomDetailById" resultMap="roomDetailResult">
+        select r.id as rid, r.code as code, r.building_id as building_id, r.id as room_id,
+               f.name as building_name, rt.price as price
+        from room r
+                 left join building f on f.id = r.building_id
+                 left join area_type rt on rt.name = r.type_name
+        where r.id = #{id}
+    </select>
+
+    <insert id="insertRoom" parameterType="Room" useGeneratedKeys="true" keyProperty="id">
+        insert into room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">code,</if>
+            <if test="sort != null">sort,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="buildingId != null">building_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">#{code},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="buildingId != null">#{buildingId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRoom" parameterType="Room">
+        update room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="buildingId != null">building_id = #{buildingId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRoomById" parameterType="Long">
+        delete from room where id = #{id}
+    </delete>
+
+    <delete id="deleteRoomByIds" parameterType="String">
+        delete from room where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

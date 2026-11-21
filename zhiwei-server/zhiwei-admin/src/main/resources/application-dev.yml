@@ -1,0 +1,126 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 1000
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 800
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 100
+
+# 日志配置
+logging:
+  level:
+    com.zhiwei: debug
+    org.springframework: warn
+# 开启spring-ai的简单日志
+    org.springframework.ai: DEBUG
+
+# Spring配置
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen3.5:9b
+          temperature: 0.7
+
+    openai:
+      api-key: ${BAI_LIAN_API_KEY:sk-placeholder}  #读取环境变量中的api key，未配置时为占位符，AI 功能不可用但不影响启动
+      base-url: ${BAI_LIAN_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode}
+      chat:
+        options:
+          model: ${BAI_LIAN_CHAT_MODEL:qwen-plus}
+          temperature: 0.7
+      embedding:
+        options:
+          model: ${BAI_LIAN_EMBEDDING_MODEL:text-embedding-v4}
+          dimensions: 1024
+
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:zhiwei}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  # redis 配置
+  data:
+    redis:
+      # 地址
+      host: ${REDIS_HOST:localhost}
+      # 端口，默认为6379
+      port: ${REDIS_PORT:6379}
+      # 数据库索引
+      database: 0
+      # 密码
+      password: ${REDIS_PASSWORD:}
+      # 连接超时时间
+      timeout: 10s
+      jedis:
+        pool:
+          enabled: true
+# Springdoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  group-configs:
+    - group: 'default'
+      display-name: '测试模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.zhiwei
+# 向量库配置（用于知识库 RAG 检索，需 Redis Stack 支持 RediSearch 模块）
+vector-store:
+  host: ${VECTOR_REDIS_HOST:${REDIS_HOST:localhost}}
+  port: ${VECTOR_REDIS_PORT:${REDIS_PORT:6379}}
+  index-name: ${VECTOR_REDIS_INDEX:spring-ai-index}
+  # 首次启动自动创建向量索引，生产环境建议关闭
+  initialize-schema: ${VECTOR_REDIS_INIT_SCHEMA:true}
+
+# oss的配置，要根据自己实际情况来进行修改
+oss:
+  endpoint: ${OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com}
+  accessKeyId: ${OSS_ACCESS_KEY_ID:}
+  accessKeySecret: ${OSS_ACCESS_KEY_SECRET:}
+  bucketName: ${OSS_BUCKET_NAME:}
+
+# 华为云 IoTDA 配置（设备接入相关，未配置时不影响其他模块运行）
+huaweicloud:
+  ak: ${HUAWEI_IOT_AK:}
+  sk: ${HUAWEI_IOT_SK:}
+  #如果是上海一，请填写"cn-east-3"；如果是北京四，请填写"cn-north-4";
+  regionId: ${HUAWEI_IOT_REGION:cn-north-4}
+  endpoint: ${HUAWEI_IOT_ENDPOINT:}
+  projectId: ${HUAWEI_IOT_PROJECT_ID:}
+  #amqp相关配置，用于接收设备上报数据
+  host: ${HUAWEI_IOT_AMQP_HOST:}
+  accessKey: ${HUAWEI_IOT_AMQP_ACCESS_KEY:}
+  accessCode: ${HUAWEI_IOT_AMQP_ACCESS_CODE:}
+  queueName: ${HUAWEI_IOT_AMQP_QUEUE:DefaultQueue}   #默认无需改动

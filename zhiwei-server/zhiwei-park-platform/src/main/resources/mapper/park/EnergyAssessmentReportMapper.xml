@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiwei.park.mapper.EnergyAssessmentReportMapper">
+    
+    <resultMap type="EnergyAssessmentReport" id="EnergyAssessmentReportResult">
+        <result property="id"    column="id"    />
+        <result property="energyAssessmentId"    column="energy_assessment_id"    />
+        <result property="assessmentTime"    column="assessment_time"    />
+        <result property="assessorName"    column="assessor_name"    />
+        <result property="recommendedAreaType"    column="recommended_area_type"    />
+        <result property="recommendedServiceLevel"    column="recommended_service_level"    />
+        <result property="energyFocus"    column="energy_focus"    />
+        <result property="suggestionDescription"    column="suggestion_description"    />
+        <result property="electricityLevel"    column="electricity_level"    />
+        <result property="waterLevel"    column="water_level"    />
+        <result property="perceptionCommunicationLevel"    column="gas_level"    />
+        <result property="socialParticipationLevel"    column="hvac_level"    />
+        <result property="initialGrade"    column="initial_grade"    />
+        <result property="finalGrade"    column="final_grade"    />
+        <result property="gradeChangeReason"    column="grade_change_reason"    />
+        <result property="tenantCooperation"    column="tenant_cooperation"    />
+        <result property="equipmentSuggestion"    column="equipment_suggestion"    />
+        <result property="operationSuggestion"    column="operation_suggestion"    />
+        <result property="parkPreparation"    column="park_preparation"    />
+        <result property="energyScore"    column="energy_score"    />
+        <result property="riskLevel"    column="risk_level"    />
+        <result property="reportSummary"    column="report_summary"    />
+        <result property="abnormalAnalysis"    column="abnormal_analysis"    />
+        <result property="systemScore"    column="system_score"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="coreSuggestion"    column="core_suggestion"    />
+        <result property="settleInStatus"    column="settle_in_status"    />
+    </resultMap>
+
+    <sql id="selectEnergyAssessmentReportVo">
+        select id, energy_assessment_id, assessment_time, assessor_name, recommended_area_type, recommended_service_level, energy_focus, suggestion_description, electricity_level, water_level, gas_level, hvac_level, initial_grade, final_grade, grade_change_reason, tenant_cooperation, equipment_suggestion, operation_suggestion, park_preparation, energy_score, risk_level, report_summary, abnormal_analysis, system_score, create_by, create_time, update_by, update_time, remark, core_suggestion, settle_in_status from energy_assessment_report
+    </sql>
+
+    <select id="selectEnergyAssessmentReportList" parameterType="EnergyAssessmentReport" resultMap="EnergyAssessmentReportResult">
+        <include refid="selectEnergyAssessmentReportVo"/>
+        <where>  
+            <if test="energyAssessmentId != null  and energyAssessmentId != ''"> and energy_assessment_id = #{energyAssessmentId}</if>
+            <if test="assessmentTime != null "> and assessment_time = #{assessmentTime}</if>
+            <if test="assessorName != null  and assessorName != ''"> and assessor_name like concat('%', #{assessorName}, '%')</if>
+            <if test="recommendedAreaType != null  and recommendedAreaType != ''"> and recommended_area_type = #{recommendedAreaType}</if>
+            <if test="recommendedServiceLevel != null  and recommendedServiceLevel != ''"> and recommended_service_level = #{recommendedServiceLevel}</if>
+            <if test="energyFocus != null  and energyFocus != ''"> and energy_focus = #{energyFocus}</if>
+            <if test="suggestionDescription != null  and suggestionDescription != ''"> and suggestion_description = #{suggestionDescription}</if>
+            <if test="electricityLevel != null  and electricityLevel != ''"> and electricity_level = #{electricityLevel}</if>
+            <if test="waterLevel != null  and waterLevel != ''"> and water_level = #{waterLevel}</if>
+            <if test="perceptionCommunicationLevel != null  and perceptionCommunicationLevel != ''"> and gas_level = #{perceptionCommunicationLevel}</if>
+            <if test="socialParticipationLevel != null  and socialParticipationLevel != ''"> and hvac_level = #{socialParticipationLevel}</if>
+            <if test="initialGrade != null  and initialGrade != ''"> and initial_grade = #{initialGrade}</if>
+            <if test="finalGrade != null  and finalGrade != ''"> and final_grade = #{finalGrade}</if>
+            <if test="gradeChangeReason != null  and gradeChangeReason != ''"> and grade_change_reason = #{gradeChangeReason}</if>
+            <if test="tenantCooperation != null  and tenantCooperation != ''"> and tenant_cooperation = #{tenantCooperation}</if>
+            <if test="equipmentSuggestion != null  and equipmentSuggestion != ''"> and equipment_suggestion = #{equipmentSuggestion}</if>
+            <if test="operationSuggestion != null  and operationSuggestion != ''"> and operation_suggestion = #{operationSuggestion}</if>
+            <if test="parkPreparation != null  and parkPreparation != ''"> and park_preparation = #{parkPreparation}</if>
+            <if test="energyScore != null  and energyScore != ''"> and energy_score = #{energyScore}</if>
+            <if test="riskLevel != null  and riskLevel != ''"> and risk_level = #{riskLevel}</if>
+            <if test="reportSummary != null  and reportSummary != ''"> and report_summary = #{reportSummary}</if>
+            <if test="abnormalAnalysis != null  and abnormalAnalysis != ''"> and abnormal_analysis = #{abnormalAnalysis}</if>
+            <if test="systemScore != null  and systemScore != ''"> and system_score = #{systemScore}</if>
+            <if test="coreSuggestion != null "> and core_suggestion = #{coreSuggestion}</if>
+            <if test="settleInStatus != null "> and settle_in_status = #{settleInStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnergyAssessmentReportById" parameterType="Long" resultMap="EnergyAssessmentReportResult">
+        <include refid="selectEnergyAssessmentReportVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEnergyAssessmentReport" parameterType="EnergyAssessmentReport" useGeneratedKeys="true" keyProperty="id">
+        insert into energy_assessment_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="energyAssessmentId != null">energy_assessment_id,</if>
+            <if test="assessmentTime != null">assessment_time,</if>
+            <if test="assessorName != null">assessor_name,</if>
+            <if test="recommendedAreaType != null">recommended_area_type,</if>
+            <if test="recommendedServiceLevel != null">recommended_service_level,</if>
+            <if test="energyFocus != null">energy_focus,</if>
+            <if test="suggestionDescription != null">suggestion_description,</if>
+            <if test="electricityLevel != null">electricity_level,</if>
+            <if test="waterLevel != null">water_level,</if>
+            <if test="perceptionCommunicationLevel != null">gas_level,</if>
+            <if test="socialParticipationLevel != null">hvac_level,</if>
+            <if test="initialGrade != null">initial_grade,</if>
+            <if test="finalGrade != null">final_grade,</if>
+            <if test="gradeChangeReason != null">grade_change_reason,</if>
+            <if test="tenantCooperation != null">tenant_cooperation,</if>
+            <if test="equipmentSuggestion != null">equipment_suggestion,</if>
+            <if test="operationSuggestion != null">operation_suggestion,</if>
+            <if test="parkPreparation != null">park_preparation,</if>
+            <if test="energyScore != null">energy_score,</if>
+            <if test="riskLevel != null">risk_level,</if>
+            <if test="reportSummary != null">report_summary,</if>
+            <if test="abnormalAnalysis != null">abnormal_analysis,</if>
+            <if test="systemScore != null">system_score,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="coreSuggestion != null">core_suggestion,</if>
+            <if test="settleInStatus != null">settle_in_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="energyAssessmentId != null">#{energyAssessmentId},</if>
+            <if test="assessmentTime != null">#{assessmentTime},</if>
+            <if test="assessorName != null">#{assessorName},</if>
+            <if test="recommendedAreaType != null">#{recommendedAreaType},</if>
+            <if test="recommendedServiceLevel != null">#{recommendedServiceLevel},</if>
+            <if test="energyFocus != null">#{energyFocus},</if>
+            <if test="suggestionDescription != null">#{suggestionDescription},</if>
+            <if test="electricityLevel != null">#{electricityLevel},</if>
+            <if test="waterLevel != null">#{waterLevel},</if>
+            <if test="perceptionCommunicationLevel != null">#{perceptionCommunicationLevel},</if>
+            <if test="socialParticipationLevel != null">#{socialParticipationLevel},</if>
+            <if test="initialGrade != null">#{initialGrade},</if>
+            <if test="finalGrade != null">#{finalGrade},</if>
+            <if test="gradeChangeReason != null">#{gradeChangeReason},</if>
+            <if test="tenantCooperation != null">#{tenantCooperation},</if>
+            <if test="equipmentSuggestion != null">#{equipmentSuggestion},</if>
+            <if test="operationSuggestion != null">#{operationSuggestion},</if>
+            <if test="parkPreparation != null">#{parkPreparation},</if>
+            <if test="energyScore != null">#{energyScore},</if>
+            <if test="riskLevel != null">#{riskLevel},</if>
+            <if test="reportSummary != null">#{reportSummary},</if>
+            <if test="abnormalAnalysis != null">#{abnormalAnalysis},</if>
+            <if test="systemScore != null">#{systemScore},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="coreSuggestion != null">#{coreSuggestion},</if>
+            <if test="settleInStatus != null">#{settleInStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnergyAssessmentReport" parameterType="EnergyAssessmentReport">
+        update energy_assessment_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="energyAssessmentId != null">energy_assessment_id = #{energyAssessmentId},</if>
+            <if test="assessmentTime != null">assessment_time = #{assessmentTime},</if>
+            <if test="assessorName != null">assessor_name = #{assessorName},</if>
+            <if test="recommendedAreaType != null">recommended_area_type = #{recommendedAreaType},</if>
+            <if test="recommendedServiceLevel != null">recommended_service_level = #{recommendedServiceLevel},</if>
+            <if test="energyFocus != null">energy_focus = #{energyFocus},</if>
+            <if test="suggestionDescription != null">suggestion_description = #{suggestionDescription},</if>
+            <if test="electricityLevel != null">electricity_level = #{electricityLevel},</if>
+            <if test="waterLevel != null">water_level = #{waterLevel},</if>
+            <if test="perceptionCommunicationLevel != null">gas_level = #{perceptionCommunicationLevel},</if>
+            <if test="socialParticipationLevel != null">hvac_level = #{socialParticipationLevel},</if>
+            <if test="initialGrade != null">initial_grade = #{initialGrade},</if>
+            <if test="finalGrade != null">final_grade = #{finalGrade},</if>
+            <if test="gradeChangeReason != null">grade_change_reason = #{gradeChangeReason},</if>
+            <if test="tenantCooperation != null">tenant_cooperation = #{tenantCooperation},</if>
+            <if test="equipmentSuggestion != null">equipment_suggestion = #{equipmentSuggestion},</if>
+            <if test="operationSuggestion != null">operation_suggestion = #{operationSuggestion},</if>
+            <if test="parkPreparation != null">park_preparation = #{parkPreparation},</if>
+            <if test="energyScore != null">energy_score = #{energyScore},</if>
+            <if test="riskLevel != null">risk_level = #{riskLevel},</if>
+            <if test="reportSummary != null">report_summary = #{reportSummary},</if>
+            <if test="abnormalAnalysis != null">abnormal_analysis = #{abnormalAnalysis},</if>
+            <if test="systemScore != null">system_score = #{systemScore},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="coreSuggestion != null">core_suggestion = #{coreSuggestion},</if>
+            <if test="settleInStatus != null">settle_in_status = #{settleInStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEnergyAssessmentReportById" parameterType="Long">
+        delete from energy_assessment_report where id = #{id}
+    </delete>
+
+    <delete id="deleteEnergyAssessmentReportByIds" parameterType="String">
+        delete from energy_assessment_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
